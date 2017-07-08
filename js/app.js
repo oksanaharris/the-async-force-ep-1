@@ -1,9 +1,15 @@
 
-var person4Request = new XMLHttpRequest ();
+function createXHR(method, url, cb){
+  var newRequest = new XMLHttpRequest ();
 
-person4Request.addEventListener('load', person4Listener);
-person4Request.open("GET", 'http://swapi.co/api/people/4/');
-person4Request.send();
+  newRequest.addEventListener('load', cb);
+  newRequest.open(method, url);
+  newRequest.send();
+
+  return newRequest;
+}
+
+var person4Request = createXHR("GET", 'http://swapi.co/api/people/4/', person4Listener);
 
 function person4Listener (){
   var person4Obj = JSON.parse(this.responseText);
@@ -11,25 +17,18 @@ function person4Listener (){
   var person4NameEl = document.getElementById('person4Name');
   person4NameEl.innerHTML = person4Obj.name;
 
-  var person4HWRequest = new XMLHttpRequest ();
-  person4HWRequest.addEventListener('load', person4HWListener);
-  person4HWRequest.open('GET', person4Obj.homeworld);
-  person4HWRequest.send();
+  var person4HWRequest = createXHR("GET", person4Obj.homeworld, person4HWListener);
 
   function person4HWListener(){
     var person4HWObj = JSON.parse(this.responseText);
 
     var person4HWEl = document.getElementById('person4HomeWorld');
     person4HWEl.innerHTML = person4HWObj.name;
-
   }
 
 }
 
-var person14Request = new XMLHttpRequest ();
-person14Request.addEventListener('load', person14Listener);
-person14Request.open('GET', 'http://swapi.co/api/people/14/');
-person14Request.send();
+var person14Request = createXHR("GET", 'http://swapi.co/api/people/14/', person14Listener);
 
 function person14Listener(){
   var person14Obj = JSON.parse(this.responseText);
@@ -39,10 +38,7 @@ function person14Listener(){
 
   var person14Species = person14Obj.species[0];
 
-  var person14SpeciesRequest = new XMLHttpRequest();
-  person14SpeciesRequest.addEventListener('load', person14SpeciesListener);
-  person14SpeciesRequest.open('GET', person14Species);
-  person14SpeciesRequest.send();
+  var person14SpeciesRequest = createXHR("GET", person14Species, person14SpeciesListener);
 
   function person14SpeciesListener(){
     var person14SpeciesObj = JSON.parse(this.responseText);
@@ -52,10 +48,7 @@ function person14Listener(){
   }
 }
 
-var filmsRequest = new XMLHttpRequest ();
-filmsRequest.addEventListener('load', filmsListener);
-filmsRequest.open('GET', 'http://swapi.co/api/films/');
-filmsRequest.send();
+var filmsRequest = createXHR("GET", 'http://swapi.co/api/films/', filmsListener);
 
 function filmsListener (){
   var filmsObj = JSON.parse(this.responseText);
@@ -84,13 +77,11 @@ function filmsListener (){
     filmsLiEl.appendChild(filmsPlanetUlEl);
 
     var planetsArr = film.planets;
+    console.log(planetsArr)
 
     planetsArr.forEach((planet) => {
 
-      var planetRequest = new XMLHttpRequest();
-      planetRequest.addEventListener('load', planetListener);
-      planetRequest.open('GET', planet);
-      planetRequest.send();
+      var planetRequest = createXHR("GET", planet, planetListener);
 
       function planetListener(){
         var planetObj = JSON.parse(this.responseText)
